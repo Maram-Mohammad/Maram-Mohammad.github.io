@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maram Farrag Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            background-image: url('https://via.placeholder.com/1500x800');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .hero .title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .buttons.is-centered a {
+            margin: 0 0.5rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 3rem 1.5rem;
+        }
+
+        section .title {
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .has-background-light {
+            background-color: #f5f5f5;
+        }
+
+        /* Skills Section */
+        #skills .box {
+            background-color: #3273dc;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        /* Timeline Styling */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+        }
+
+        .timeline-marker {
+            width: 15px;
+            height: 15px;
+            background-color: #3273dc;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #363636;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero is-primary is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title" id="name">Maram Farrag</h1>
+                <p class="subtitle" id="title">Senior Backend Engineer</p>
+                <div class="buttons is-centered">
+                    <a href="#about" class="button is-light">About</a>
+                    <a href="#skills" class="button is-light">Skills</a>
+                    <a href="#experience" class="button is-light">Experience</a>
+                    <a href="#contact" class="button is-light">Contact</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered">About Me</h2>
+            <p id="about-text" class="content has-text-centered"></p>
+        </div>
+    </section>
+
+    <section id="skills" class="section has-background-light">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered">Skills</h2>
+            <div class="columns is-multiline is-centered" id="skills-list"></div>
+        </div>
+    </section>
+
+    <section id="experience" class="section">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered">Experience</h2>
+            <div class="timeline" id="experience-list"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="section has-background-light">
+        <div class="container">
+            <h2 class="title is-3 has-text-centered">Contact</h2>
+            <div class="content has-text-centered">
+                <p>Email: <span id="email"></span></p>
+                <p>LinkedIn: <a id="linkedin" href="" target="_blank">Profile</a></p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>&copy; <span id="current-year"></span> Maram Farrag. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+        // Dynamically load data from the JSON file
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                // Populate header
+                document.getElementById('name').textContent = data.name;
+                document.getElementById('title').textContent = data.title;
+
+                // Populate about section
+                document.getElementById('about-text').textContent = data.about;
+
+                // Populate skills section
+                const skillsList = document.getElementById('skills-list');
+                data.skills.forEach(skill => {
+                    const column = document.createElement('div');
+                    column.className = 'column is-one-quarter';
+                    column.innerHTML = `<div class="box">${skill}</div>`;
+                    skillsList.appendChild(column);
+                });
+
+                // Populate experience section
+                const experienceList = document.getElementById('experience-list');
+                data.experience.forEach(exp => {
+                    const div = document.createElement('div');
+                    div.className = 'timeline-item';
+                    div.innerHTML = `
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <p class="heading">${exp.duration}</p>
+                            <h3>${exp.role} - ${exp.company}</h3>
+                            <ul>${exp.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
+                        </div>`;
+                    experienceList.appendChild(div);
+                });
+
+                // Populate contact section
+                document.getElementById('email').textContent = data.contact.email;
+                document.getElementById('linkedin').href = data.contact.linkedin;
+
+                // Set current year in footer
+                document.getElementById('current-year').textContent = new Date().getFullYear();
+            })
+            .catch(error => console.error('Error loading data:', error));
+    </script>
+</body>
+
+</html>
